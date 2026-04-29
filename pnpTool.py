@@ -117,6 +117,59 @@ def process_card_image(path, card_w_px, card_h_px, bleed_px):
 # ==========================
 # PDF
 # ==========================
+def draw_alpha_cameo5_marks(c, a4_w, a4_h):
+    """
+    Desenha as 4 marcas de registro em 'L' (cantoneiras) padrão Série Alpha/Cameo 5
+    diretamente no canvas do ReportLab.
+    """
+    # --- CONFIGURAÇÕES DA MARCA ---
+    # Tamanho de cada perna do 'L' (padrão 10mm a 15mm)
+    mark_size = 5 * mm 
+    # Espessura da linha (padrão 0.5mm)
+    thickness = 0.5 * mm
+    # Distância da borda do papel para o canto externo do 'L'
+    offset = 10 * mm 
+    
+    # Define cor preta e espessura
+    c.setStrokeColorRGB(0, 0, 0)
+    c.setLineWidth(thickness)
+    
+    # --- CÁLCULO DAS COORDENADAS ---
+    # Coordenadas das bordas internas de segurança
+    left = offset
+    right = a4_w - offset
+    bottom = offset
+    top = a4_h - offset
+
+    # --- DESENHAR OS 4 'L's ---
+
+    # 1. Canto Superior Esquerdo (┌)
+    # Linha Horizontal (da esquerda para a direita)
+    c.line(left, top, left + mark_size, top)
+    # Linha Vertical (de cima para baixo)
+    c.line(left, top, left, top - mark_size)
+
+    # 2. Canto Superior Direito (┐)
+    # Linha Horizontal (da direita para a esquerda)
+    c.line(right, top, right - mark_size, top)
+    # Linha Vertical (de cima para baixo)
+    c.line(right, top, right, top - mark_size)
+
+    # 3. Canto Inferior Direito (┘)
+    # Linha Horizontal (da direita para a esquerda)
+    c.line(right, bottom, right - mark_size, bottom)
+    # Linha Vertical (de baixo para cima)
+    c.line(right, bottom, right, bottom + mark_size)
+
+    # 4. Canto Inferior Esquerdo (└)
+    # Linha Horizontal (da esquerda para a direita)
+    c.line(left, bottom, left + mark_size, bottom)
+    # Linha Vertical (de baixo para cima)
+    c.line(left, bottom, left, bottom + mark_size)
+
+    # Restaurar configurações padrão (boa prática)
+    c.setLineWidth(1)
+
 def generate_pdf(front_images, back_images):
     if ORIENTATION == "portrait":
         a4_w, a4_h = 210 * mm, 297 * mm
@@ -156,6 +209,7 @@ def generate_pdf(front_images, back_images):
                     y = offset_y + (GRID_ROWS - 1 - row) * card_h_pt
                     c.drawImage(temp, x, y, width=card_w_pt, height=card_h_pt)
                     os.remove(temp)
+        draw_alpha_cameo5_marks(c, a4_w, a4_h)
         c.showPage()
 
         # --- PÁGINA DE VERSOS ---
@@ -333,7 +387,6 @@ if __name__ == "__main__":
         ]
 
     generate_pdf(front_images, back_images)
-    merge_marks_corners(OUTPUT_PDF, MARKS_PDF, FINAL_PDF)
     print("✅ PDF generated successfully")
 
     if GENERATE_DXF:
