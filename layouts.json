@@ -1,0 +1,31 @@
+{
+    "card_sizes": {
+        "45x68x2": {
+            "width": 45,
+            "height": 68,
+            "radius": 2,
+            "bleed": 3,
+            "orientation": "landscape",
+            "rows": 2,
+            "cols": 5
+        },
+        "148x210x3": {
+            "width": 210,
+            "height": 148,
+            "radius": 3,
+            "bleed": 3,
+            "orientation": "landscape",
+            "rows": 1,
+            "cols": 1
+        },
+        "63x88x3": {
+            "width": 63,
+            "height": 88,
+            "radius": 3,
+            "bleed": 2,
+            "orientation": "landscape",
+            "rows": 2,
+            "cols": 4
+        }
+    }
+}

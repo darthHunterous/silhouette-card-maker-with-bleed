@@ -1,33 +1,63 @@
-import os
+import argparse
+import ezdxf
+import json
 import math
+import os
+import sys
+
 from PIL import Image, ImageOps
+from pypdf import PdfReader, PdfWriter, Transformation
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import mm
-import ezdxf
-from pypdf import PdfReader, PdfWriter, Transformation
 
 # ==========================
 # CONFIG
 # ==========================
-INPUT_FOLDER = "Frentes"
-VERSOS_FOLDER = "Versos"
-OUTPUT_PDF = "output.pdf"
+INPUT_FOLDER = "Front"
+VERSOS_FOLDER = "Back"
+
 MARKS_PDF = "marks-landscape.pdf"
-FINAL_PDF = "final.pdf"
+OUTPUT_PDF = "output.pdf"
 OUTPUT_DXF = "cut_lines.dxf"
 
-CARD_WIDTH_MM = 45
-CARD_HEIGHT_MM = 68
-BLEED_MM = 3
-CORNER_RADIUS_MM = 2
+FINAL_PDF = "final.pdf"
+LAYOUT_FILE = "layouts.json"
 
 BLEED_MODE = "mirror"  # "mirror" ou "color"
 BLEED_COLOR = (255, 0, 0)
 
-GRID_COLS = 5
-GRID_ROWS = 2
+parser = argparse.ArgumentParser(description="PNP Tool")
 
-ORIENTATION = "landscape"  # "portrait" ou "landscape"
+parser.add_argument("layout", help="Layout key defined on layouts.json")
+parser.add_argument("-dxf", "--dxf", action="store_true", help="Generate DXF cut file")
+
+args = parser.parse_args()
+
+LAYOUT_KEY = args.layout
+GENERATE_DXF = args.dxf
+
+if os.path.exists(LAYOUT_FILE):
+    with open(LAYOUT_FILE, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+        
+        layouts = data.get("card_sizes", {})
+        config = layouts.get(LAYOUT_KEY)
+
+        if config:
+            CARD_WIDTH_MM = config.get("width")
+            CARD_HEIGHT_MM = config.get("height")
+            CORNER_RADIUS_MM = config.get("radius")
+            BLEED_MM = config.get("bleed")
+            ORIENTATION = config.get("orientation")
+            GRID_ROWS = config.get("rows")
+            GRID_COLS = config.get("cols")
+            print(f"Layout '{LAYOUT_KEY}' loaded successfully")
+        else:
+            print(f"Error: '{LAYOUT_KEY}' layout not found")
+            sys.exit(1)
+else:
+    print(f"Error: {LAYOUT_FILE} not found")
+
 
 DPI = 300
 
@@ -304,6 +334,8 @@ if __name__ == "__main__":
 
     generate_pdf(front_images, back_images)
     merge_marks_corners(OUTPUT_PDF, MARKS_PDF, FINAL_PDF)
-    generate_dxf(front_images)
+    print("✅ PDF generated successfully")
 
-    print("✅ PDF e DXF gerados com sucesso!")
+    if GENERATE_DXF:
+        generate_dxf(front_images)
+        print("✅ DXF generated successfully")
