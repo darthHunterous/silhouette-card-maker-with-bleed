@@ -23,15 +23,28 @@ OUTPUT_DXF = "cut_lines.dxf"
 FINAL_PDF = "final.pdf"
 LAYOUT_FILE = "layouts.json"
 
-BLEED_MODE = "mirror"  # "mirror" ou "color"
-BLEED_COLOR = (255, 0, 0)
-
 parser = argparse.ArgumentParser(description="PNP Tool")
 
 parser.add_argument("layout", help="Layout key defined on layouts.json")
 parser.add_argument("-dxf", "--dxf", action="store_true", help="Generate DXF cut file")
 
+parser.add_argument(
+    "--bleed-color",
+    nargs=3,
+    type=int,
+    metavar=("R", "G", "B"),
+    help="Use solid color bleed with RGB values"
+)
+
 args = parser.parse_args()
+
+BLEED_MODE = "mirror"  # "mirror" ou "color"
+BLEED_COLOR = (255, 0, 0)
+
+# Override if user provided RGB
+if args.bleed_color:
+    BLEED_MODE = "color"
+    BLEED_COLOR = tuple(args.bleed_color)
 
 LAYOUT_KEY = args.layout
 GENERATE_DXF = args.dxf
