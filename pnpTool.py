@@ -313,31 +313,24 @@ def generate_dxf(images):
     offset_x = (a4_w - grid_w) / 2
     offset_y = (a4_h - grid_h) / 2
 
-    idx = 0
-    total = len(images)
+    # Gera SEMPRE o grid completo
+    for row in range(GRID_ROWS):
+        for col in range(GRID_COLS):
 
-    while idx < total:
-        for row in range(GRID_ROWS):
-            for col in range(GRID_COLS):
-                if idx >= total:
-                    break
+            x_full = offset_x + col * full_w
+            y_full = offset_y + (GRID_ROWS - 1 - row) * full_h
 
-                x_full = offset_x + col * full_w
-                y_full = offset_y + (GRID_ROWS - 1 - row) * full_h
+            x_card = x_full + BLEED_MM
+            y_card = y_full + BLEED_MM
 
-                x_card = x_full + BLEED_MM
-                y_card = y_full + BLEED_MM
-
-                add_rounded_rect(
-                    msp,
-                    x_card,
-                    y_card,
-                    CARD_WIDTH_MM,
-                    CARD_HEIGHT_MM,
-                    CORNER_RADIUS_MM
-                )
-
-                idx += 1
+            add_rounded_rect(
+                msp,
+                x_card,
+                y_card,
+                CARD_WIDTH_MM,
+                CARD_HEIGHT_MM,
+                CORNER_RADIUS_MM
+            )
 
     # força visibilidade no Silhouette
     msp.add_point((0, 0))
