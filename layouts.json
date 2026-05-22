@@ -98,6 +98,15 @@
             "orientation": "landscape",
             "rows": 7,
             "cols": 11
+        },
+        "token-21mm": {
+            "width": 21,
+            "height": 21,
+            "radius": 10.5,
+            "bleed": 3,
+            "orientation": "landscape",
+            "rows": 6,
+            "cols": 10
         }
     }
 }
