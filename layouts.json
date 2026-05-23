@@ -54,6 +54,15 @@
             "rows": 2,
             "cols": 4
         },
+        "65x100x6": {
+            "width": 65,
+            "height": 100,
+            "radius": 6,
+            "bleed": 3,
+            "orientation": "portrait",
+            "rows": 2,
+            "cols": 2
+        },
         "80x80x3": {
             "width": 80,
             "height": 80,
