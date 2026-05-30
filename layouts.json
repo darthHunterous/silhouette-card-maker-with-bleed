@@ -9,6 +9,15 @@
             "rows": 2,
             "cols": 5
         },
+        "48x73x5": {
+            "width": 48,
+            "height": 73,
+            "radius": 5,
+            "bleed": 3,
+            "orientation": "landscape",
+            "rows": 2,
+            "cols": 5
+        },
         "58x89x4": {
             "width": 58,
             "height": 89,
